@@ -1,0 +1,33 @@
+name: scrape
+
+# Runs the real scraper against books.toscrape.com (a practice site made for scraping)
+# every Monday at 06:00 UTC, and whenever you click "Run workflow".
+# Each run starts with an empty database and uploads it as a downloadable artifact.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      max_pages:
+        description: "Number of listing pages to scrape"
+        default: "3"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e .
+      # On scheduled runs there are no inputs, so fall back to 3 pages.
+      - run: python -m scrapepipe run --max-pages "${{ inputs.max_pages || '3' }}" --db data/books.db
+      - run: python -m scrapepipe report --db data/books.db
+      - uses: actions/upload-artifact@v4
+        with:
+          name: books-database
+          path: |
+            data/books.db
+            data/raw/
