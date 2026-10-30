@@ -4,6 +4,8 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+![Web Scraping Data Pipeline](docs/social-preview.png)
+
 An automated **scrape -> clean -> store -> analyse** pipeline in Python. It collects book listings from [books.toscrape.com](https://books.toscrape.com/) (a practice site that exists to be scraped), keeps the raw data, validates every record, loads the good ones into **SQLite** without creating duplicates, tracks **price changes over time**, and answers questions with **SQL**.
 
 > **Note on testing:** the tests and the example output below use a small local web server that copies the markup of books.toscrape.com. The live site was not scraped while building this project (the build environment had no access to it). A GitHub Actions workflow (`scrape`) runs the real scraper on a schedule, and the first run of that workflow is the first live check. If the site changes its HTML, the run is marked `empty` instead of silently storing nothing.
